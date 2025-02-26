@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    @font-face {
+      font-family: 'KiwiSoda';
+      src: url('./kiwisoda/KiwiSoda.ttf') format('truetype'); 
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      /* overflow-y: hidden; */
+    }
+    .bg {
+      position: relative;
+      width: 100%;
+      height: 700px;
+      z-index: -1;
+      filter: brightness(80%);
+      transition: opacity 1s ease-in-out;
+    }
+    .bg.fade-out {
+      opacity: 0;
+    }
+    .text {
+      display: flex;
+      position: absolute;
+      background-color: transparent;
+      width: 100%;
+      height: 500px;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      z-index: 2; /* Ensure text is above slider */
+    }
+    .text h1 {
+      font-size: 8rem;
+      font-family: kiwisoda;
+      color: #ffffff; /* Ensure text is visible against background */
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Added shadow for readability */
+    }
+    .bike {
+      position: absolute;
+      z-index: 5;
+      width: 100%;
+      top: 450px;
+      animation: bike linear infinite 50s;
+      filter: drop-shadow(0px 15px 10px rgba(0, 0, 0, 0.6));
+    }
+    .grass {
+      position: relative;
+      z-index: -5;
+      width: 100%;
+      margin: -20px;
+      padding: 0;
+      height: 500px;
+      filter: brightness(70%);
+    }
+    @keyframes bike {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(100%); }
+    }
+
+    .slider-container {
+      position: absolute;
+      top: 150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 800px;
+      background: transparent;
+      padding: 1rem;
+      z-index: 1; /* Ensure slider is above background but below text */
+    }
+
+    .slider {
+      display: flex;
+      width: 100%;
+      transition: transform 0.5s ease-in-out;
+      overflow: hidden;
+    }
+
+    .slide {
+      flex: 0 0 100%;
+      padding: 2rem;
+      text-align: center;
+      opacity: 1;
+      animation: fadeIn 0.5s forwards;
+      box-sizing: border-box;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .slide h2 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: #ffffff;
+      font-family: 'KiwiSoda', sans-serif;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide p {
+      font-size: 1.8rem;
+      color: #ffffff;
+      font-family: sans-serif;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .dots-container {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 1.5rem;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: #4299e1;
+      transform: scale(1.4);
+    }
+
+    .day-indicator {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: #ffffff;
+      font-family: 'KiwiSoda', sans-serif;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      transition: transform 1s ease-in-out;
+    }
+    .day-indicator.future {
+      transform: translateX(-50%) translateY(-20px) scale(1.1);
+    }
+
+    .nav-left, .nav-right {
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      z-index: 10; /* Ensure navigation is clickable above all */
+      cursor: pointer;
+    }
+    .nav-left {
+      left: 0;
+    }
+    .nav-right {
+      right: 0;
+    }
+    .grasses img{
+      transform: rotateY('180');
+    }
+
+    .container{
+      background: rgb(126,124,161);
+      background: linear-gradient(180deg, rgba(126,124,161,1) 0%, rgba(51,46,91,1) 52%, rgba(0,0,0,1) 100%);
+      height: 800px;
+      margin: -10px;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TruHacks Schedule</title>
+</head>
+<body>
+  <div class="text"><h1>TruHacks</h1></div>
+  
+  <div class="slider-container">
+    <div class="day-indicator">Day 1</div>
+    <div class="slider">
+     
+      <div class="slide"><h2>Opening Ceremony</h2><p>9:00 AM - 10:00 AM</p></div>
+      <div class="slide"><h2>Team Formation</h2><p>10:30 AM - 11:30 AM</p></div>
+      <div class="slide"><h2>Workshop #1</h2><p>12:00 PM - 1:00 PM</p></div>
+      <div class="slide"><h2>Lunch Break</h2><p>1:30 PM - 2:30 PM</p></div>
+      <div class="slide"><h2>Hacking Begins</h2><p>3:00 PM - 6:00 PM</p></div>
+      <div class="slide"><h2>Workshop #2</h2><p>6:30 PM - 7:30 PM</p></div>
+      <div class="slide"><h2>Dinner Break</h2><p>8:00 PM - 9:00 PM</p></div>
+      <div class="slide"><h2>Night Hacking</h2><p>9:30 PM - 12:00 AM</p></div>
+      
+      <div class="slide"><h2>Morning Review</h2><p>9:00 AM - 10:00 AM</p></div>
+      <div class="slide"><h2>Workshop #3</h2><p>10:30 AM - 11:30 AM</p></div>
+      <div class="slide"><h2>Coding Sprint</h2><p>12:00 PM - 1:00 PM</p></div>
+      <div class="slide"><h2>Lunch Break</h2><p>1:30 PM - 2:30 PM</p></div>
+      <div class="slide"><h2>Project Work</h2><p>3:00 PM - 6:00 PM</p></div>
+      <div class="slide"><h2>Mentor Session</h2><p>6:30 PM - 7:30 PM</p></div>
+      <div class="slide"><h2>Dinner Break</h2><p>8:00 PM - 9:00 PM</p></div>
+      <div class="slide"><h2>Final Push</h2><p>9:30 PM - 12:00 AM</p></div>
+    </div>
+    
+    <div class="dots-container"></div>
+  </div>
+
+  <div class="nav-left"></div>
+  <div class="nav-right"></div>
+
+  <div class="bg">
+    <img id="background" src="Desert.gif" alt="" width="100%" height="700px">
+    <div class="bike"><img src="bike.gif" alt="" height="500px"></div>
+  </div>
+  <div class="grass"><img src="grass.gif" alt="" width="110%" height="100%"></div>
+  <div class="grasses"><img src="grasses.gif" alt="" width="110%" height="100%" ></div>
+  <section class="container">
+
+  </section>
+
+  <script>
+    const slider = document.querySelector('.slider');
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.querySelector('.dots-container');
+    const dayIndicator = document.querySelector('.day-indicator');
+    const backgroundImg = document.getElementById('background');
+    const bgContainer = document.querySelector('.bg');
+    const navLeft = document.querySelector('.nav-left');
+    const navRight = document.querySelector('.nav-right');
+
+    let currentIndex = 0;
+    const eventsPerDay = 8;
+    let currentDay = 1;
+
+    function createDots() {
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < eventsPerDay; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide((currentDay - 1) * eventsPerDay + i));
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === (currentIndex % eventsPerDay));
+      });
+    }
+
+    function updateDay() {
+      const newDay = Math.floor(currentIndex / eventsPerDay) + 1;
+      if (newDay !== currentDay) {
+        // Add transition effect
+        bgContainer.classList.add('fade-out');
+        dayIndicator.classList.add('future');
+        
+        setTimeout(() => {
+          currentDay = newDay;
+          dayIndicator.textContent = `Day ${currentDay}`;
+          backgroundImg.src = currentDay === 1 ? 'Desert.gif' : 'mountain.gif';
+          
+          // Reset after transition
+          bgContainer.classList.remove('fade-out');
+          dayIndicator.classList.remove('future');
+        }, 1000); // Match transition duration
+      }
+    }
+
+    function goToSlide(index) {
+      currentIndex = Math.max(0, Math.min(index, slides.length - 1));
+      slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+      updateDay();
+      updateDots();
+    }
+
+    function nextSlide() {
+      if (currentIndex < slides.length - 1) {
+        goToSlide(currentIndex + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) {
+        goToSlide(currentIndex - 1);
+      }
+    }
+
+    navLeft.addEventListener('click', prevSlide);
+    navRight.addEventListener('click', nextSlide);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'ArrowRight') nextSlide();
+    });
+
+    // Auto-advance slider every 5 seconds
+    setInterval(nextSlide, 5000);
+
+    // Initial setup
+    createDots();
+    slider.style.width = `${slides.length * 100}%`; // Ensure slider width accommodates all slides
+  </script>
+</body>
+</html>

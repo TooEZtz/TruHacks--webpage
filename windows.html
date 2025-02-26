@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="windows.css">
+  <title>Setup - Registration</title>
+</head>
+<body>
+  <!-- Dialog box -->
+  <div class="dialog-overlay" id="dialogOverlay">
+    <div class="dialog-box">
+      <h2>User Account Control</h2>
+      <p>Do you want to allow the following program to make changes to this computer?</p>
+      <div class="details">
+        <p><strong>Program name:</strong> Regitration.exe</p>
+        <p><strong>Verified publisher:</strong> GDSC Truman & CCE</p>
+        <p><strong>File origin:</strong> Truman State University</p>
+      </div>
+      <div class="buttons">
+        <button class="yes" onclick="proceed()">Yes</button>
+        <button class="yes" onclick="proceed()">Yes</button>
+      </div>
+      <p style="font-size: 12px; color: #333333; margin-top: 10px;">Change when these notifications appear</p>
+    </div>
+  </div>
+
+  <!-- Main content (hidden initially) -->
+  <div class="main-content" id="mainContent">
+    <div class="container">
+      <div class="topbar">
+        <div class="left">
+          <img src="install.png" alt="" width="16" height="16">
+          <p>Setup - Registration.exe</p>
+        </div>
+        <div class="right">
+          <img class="icons" width="16" height="16" src="https://img.icons8.com/windows/16/minus-math.png" alt="minus-math"/>
+          <img class="icons" width="16" height="16" src="https://img.icons8.com/windows/16/maximize-button.png" alt="maximize-button"/>
+          <img class="icons" width="16" height="16" src="https://img.icons8.com/windows/16/delete-sign.png" alt="delete-sign"/>
+        </div>
+      </div>
+      <div class="installation-content">
+        <h2>Installing</h2>
+        <p>Please wait while Setup installs Registration on your computer.</p>
+        <p>Unpacking...</p>
+        <p id="tempPath">temp/333/personal_information</p>
+        <div class="progress-bar">
+          <div id="progress" style="width: 0%;"></div>
+        </div>
+        <p id="progressPercent">0%</p>
+        <p>Elapsed time: 00:00:00     <span id="timeLeft">Time left: 00:00:00</span></p>
+        <div class="user-image">
+          <img src="tru.jpg" alt="User" width="64" height="64">
+        </div>
+        <div class="music-buttons">
+          <button id="musicButton">My repacks and music</button>
+          <button id="gameInfoButton">Game Info</button>
+        </div>
+        <div id="step1" class="form-step active">
+          <h3>Step 1: Personal Information</h3>
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+          </div>
+          <div class="buttons">
+            <button class="next" onclick="nextStep(1)">Next</button>
+          </div>
+        </div>
+        <div id="step2" class="form-step">
+          <h3>Step 2: Academic Information</h3>
+          <div class="form-group">
+            <label for="major">Major:</label>
+            <input type="text" id="major" required>
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" required>
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="buttons">
+            <button class="prev" onclick="prevStep(2)">Previous</button>
+            <button class="next" onclick="nextStep(2)">Next</button>
+          </div>
+        </div>
+        <div id="step3" class="form-step">
+          <h3>Step 3: Preferences</h3>
+          <div class="form-group">
+            <label for="dietary">Dietary Restrictions:</label>
+            <input type="text" id="dietary" placeholder="e.g., Vegetarian, Vegan, Gluten-Free">
+          </div>
+          <div class="buttons">
+            <button class="prev" onclick="prevStep(3)">Previous</button>
+            <button class="next" onclick="nextStep(3)">Next</button>
+          </div>
+        </div>
+        <div id="step4" class="form-step">
+          <h3>Step 4: Terms and Conditions</h3>
+          <div class="terms">
+            <p>Terms and Conditions Agreement</p>
+            <p>By proceeding, you agree to the following terms:</p>
+            <ul>
+              <li>You will use this service responsibly.</li>
+              <li>Your information will be kept confidential and used only for registration purposes.</li>
+              <li>You may unsubscribe from notifications at any time.</li>
+            </ul>
+          </div>
+          <div class="form-group terms-checkbox">
+            <input type="checkbox" id="terms" required>
+            <label for="terms">I agree to the Terms and Conditions</label>
+          </div>
+          <div class="buttons">
+            <button class="prev" onclick="prevStep(4)">Previous</button>
+            <button class="next" onclick="submitForm()">Finish</button>
+          </div>
+        </div>
+        <div id="completion" class="form-step" style="display: none;">
+          <h3>Registration Complete!</h3>
+          <p>Thank you for registering. Your installation is now complete.</p>
+        </div>
+      </div>
+    </div>
+    <div class="taskbar">
+      <div class="left">
+        <div class="image">
+          <img src="logo.png" alt="" width="80%" height="80%">
+        </div>
+        <h1>Start</h1>
+      </div>
+      <div class="right">
+        <button style="padding: 5px 15px; border: 1px solid #000000; background-color: #D4D0C8; color: #000000; font-size: 12px; cursor: pointer; border-radius: 0;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to handle the "Yes" button click
+    function proceed() {
+      // Hide the dialog box
+      document.getElementById('dialogOverlay').style.display = 'none';
+      // Show the main content
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    async function submitForm() {
+      const formData = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        major: document.getElementById('major').value,
+        gender: document.getElementById('gender').value,
+        dietary: document.getElementById('dietary').value
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          alert('Registration successful!');
+          complete();
+        } else {
+          alert('Registration failed. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Registration failed. Please try again.');
+      }
+    }
+
+    function complete() {
+      if (document.getElementById('terms').checked) {
+        document.getElementById('step4').style.display = 'none';
+        document.getElementById('completion').style.display = 'block';
+        updateInstallationDisplay(5);
+      } else {
+        alert('Please agree to the Terms and Conditions before completing.');
+      }
+    }
+
+    // Your existing JavaScript code for the slider goes here
+    let currentStep = 1;
+    const progress = document.getElementById('progress');
+    const tempPath = document.getElementById('tempPath');
+    const progressPercent = document.getElementById('progressPercent');
+    const timeLeft = document.getElementById('timeLeft');
+    let audio = new Audio('music.mp3');
+    let isPlaying = false;
+    let animationRunning = false;
+    
+    const tempPaths = [
+      'temp/333/personal_information',
+      'temp/333/demographics',
+      'temp/333/preferences',
+      'temp/333/terms_and_conditions'
+    ];
+    
+    function updateInstallationDisplay(step) {
+      if (!animationRunning) {
+        startProgressAnimation(step);
+      }
+    }
+    
+    function startProgressAnimation(targetStep) {
+      animationRunning = true;
+      let currentPercent = parseInt(progress.style.width) || 0;
+      const targetPercent = (targetStep - 1) * 25; // 0%, 25%, 50%, 75%, 100%
+      const pausePoints = [25, 50, 75, 100];
+      const increment = targetPercent > currentPercent ? 1 : -1;
+    
+      progress.style.transition = 'width 0.1s linear';
+      progressPercent.style.transition = 'all 0.5s ease-out';
+    
+      function animateProgress() {
+        if (currentPercent !== targetPercent) {
+          currentPercent += increment;
+          if (currentPercent < 0) currentPercent = 0;
+          if (currentPercent > 100) currentPercent = 100;
+    
+          progress.style.width = `${currentPercent}%`;
+          progressPercent.textContent = `${currentPercent}%`;
+          tempPath.textContent = tempPaths[Math.min(Math.floor(currentPercent / 25), tempPaths.length - 1)];
+    
+          updateTimeLeft(currentPercent);
+    
+          if (pausePoints.includes(currentPercent) && currentPercent < targetPercent) {
+            animationRunning = false;
+            setTimeout(() => {
+              if (currentStep === targetStep) { // Only resume if still on the same step
+                animationRunning = true;
+                animateProgress();
+              }
+            }, 2000); // Pause for 2 seconds
+          } else {
+            setTimeout(animateProgress, 100); // Continue animation
+          }
+        } else {
+          animationRunning = false;
+          if (targetStep === 5) {
+            progress.style.width = '100%';
+            progressPercent.textContent = '100%';
+            tempPath.textContent = tempPaths[tempPaths.length - 1];
+            timeLeft.textContent = 'Time left: 00:00:00';
+          }
+        }
+      }
+    
+      animateProgress();
+    }
+    
+    function updateTimeLeft(percent) {
+      const totalTime = 20 * 60; // 20 minutes total
+      const remainingSeconds = Math.max(0, Math.floor((100 - percent) / 100 * totalTime));
+      const fluctuation = Math.floor(Math.random() * 30) - 15;
+      const finalSeconds = Math.max(0, remainingSeconds + fluctuation);
+    
+      const minutes = Math.floor(finalSeconds / 60);
+      const seconds = finalSeconds % 60;
+      timeLeft.textContent = `Time left: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+    
+    function showStep(step) {
+      document.querySelectorAll('.form-step').forEach((el, index) => {
+        el.classList.remove('active');
+        if (index + 1 === step) {
+          el.classList.add('active');
+          updateInstallationDisplay(step);
+        }
+      });
+      currentStep = step;
+    }
+    
+    function nextStep(step) {
+      if (step === 1) {
+        if (document.getElementById('name').value && document.getElementById('phone').value && document.getElementById('email').value) {
+          showStep(2);
+        } else {
+          alert('Please fill in all fields before proceeding.');
+        }
+      } else if (step === 2) {
+        if (document.getElementById('major').value && document.getElementById('gender').value) {
+          showStep(3);
+        } else {
+          alert('Please fill in all fields before proceeding.');
+        }
+      } else if (step === 3) {
+        if (document.getElementById('dietary').value) {
+          showStep(4);
+        } else {
+          alert('Please fill in all fields before proceeding.');
+        }
+      } else if (step === 4) {
+        submitForm();
+      }
+    }
+    
+    function prevStep(step) {
+      showStep(step - 1);
+    }
+    
+    document.getElementById('musicButton').addEventListener('click', function() {
+      if (isPlaying) {
+        audio.pause();
+        this.textContent = 'My repacks and music';
+      } else {
+        audio.play();
+        this.textContent = 'Pause music';
+      }
+      isPlaying = !isPlaying;
+    });
+    
+    document.getElementById('gameInfoButton').addEventListener('click', function() {
+      if (isPlaying) {
+        audio.pause();
+        document.getElementById('musicButton').textContent = 'My repacks and music';
+      } else {
+        audio.play();
+        document.getElementById('musicButton').textContent = 'Pause music';
+      }
+      isPlaying = !isPlaying;
+    });
+    
+    showStep(1);
+    updateTimeLeft(0);
+    setInterval(() => updateTimeLeft(parseInt(progress.style.width) || 0), 1000);
+  </script>
+</body>
+</html>

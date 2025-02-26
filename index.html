@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixel+LCD7&display=swap" rel="stylesheet">
+    <style>
+ @font-face {
+    font-family: 'KiwiSoda';
+    src: url('./kiwisoda/KiwiSoda.ttf') format('truetype'); 
+}
+        *{
+            font-family: kiwisoda;
+        }
+        body {
+            margin: 0;
+            background-image: url(bg.gif);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            height: 100vh;
+            cursor: none;
+            background-color: #4a004d;
+            position: relative;
+        }
+
+        /* Darker vignette overlay effect */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 200px 80px rgba(0, 0, 0, 0.9), inset 0 0 80px 40px rgba(0, 0, 0, 0.7);
+            pointer-events: none;
+            z-index: 1997;
+        }
+
+        /* Custom torch-like cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.4));
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 50px rgba(255, 255, 255, 0.7), 0 0 75px rgba(255, 255, 255, 0.5);
+            z-index: 2000;
+            transition: transform 0.1s ease;
+        }
+
+        /* Torch light effect - reduced brightness by 5% */
+        .cursor-light {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.75) 10%, rgba(255, 255, 255, 0.35) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1999;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+            mix-blend-mode: screen;
+        }
+
+        .lightning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s;
+            z-index: 999;
+        }
+
+        #screensaver {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-family: "Pixel LCD7", Arial, sans-serif;
+            font-size: 24px;
+            text-shadow: 1px 1px 2px #000000;
+            z-index: 10000;
+            transition: opacity 1s;
+        }
+
+        .menu-wrapper {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+            width: 100%; /* Full width for mobile and tablet */
+            max-width: 450px; /* Default max width */
+        }
+
+        .menu-title {
+            width: 500px; /* Adjust based on your image size */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .menu-bar {
+            width: 100%; /* Full width */
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: glassShine 5s infinite ease-in-out;
+        }
+
+        @keyframes glassShine {
+            0% { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.5); }
+            100% { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.3); }
+        }
+
+        .menu-button, .menu-bar a.menu-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 15px 20px;
+            text-align: center;
+            cursor: none;
+           
+            font-size: 50px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 5px rgba(255, 255, 255, 0.2);
+            position: relative;
+            transform: rotate(0deg);
+            animation: none;
+            text-decoration: none; /* Remove underline from links */
+            display: block; /* Make links behave like block elements */
+        }
+
+        .menu-button:hover, .menu-bar a.menu-button:hover {
+            transform: scale(1.05) rotate(0deg);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.5);
+            animation: buttonShine 1.5s infinite alternate;
+        }
+
+        @keyframes buttonShine {
+            0% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.5); }
+            100% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.7); }
+        }
+
+        .menu-button:hover::after, .menu-bar a.menu-button:hover::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            animation: cursorRipple 1s ease-out forwards;
+            z-index: -1;
+        }
+
+        @keyframes cursorRipple {
+            0% { transform: scale(0); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        .menu-slogan {
+            text-align: center;
+            color: #ffffff;
+            font-family: "Pixel LCD7", Arial, sans-serif;
+            font-size: 14px;
+            margin-top: 15px;
+            text-shadow: 1px 1px 2px #000000;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-link {
+            color: #ffffff;
+            font-size: 24px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px #000000;
+        }
+
+        .social-link:hover {
+            color: #cccccc;
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+        .logos {
+            position: relative;
+          margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            width: 800px;
+            height: 150px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 5px rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-wrapper {
+                width: 90%; /* Full width for tablets */
+                max-width: 90%;
+            }
+            .menu-bar {
+                width: 100%;
+                padding: 20px;
+            }
+            .menu-button, .menu-bar a.menu-button {
+                padding: 15px 20px;
+                font-size: 18px;
+            }
+            .menu-title {
+                width: 250px; /* Adjust for smaller screens */
+            }
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-wrapper {
+                width: 95%; /* Full width for mobile */
+                max-width: 95%;
+            }
+            .menu-bar {
+                width: 100%;
+                padding: 15px;
+            }
+            .menu-button, .menu-bar a.menu-button {
+                padding: 12px 18px;
+                font-size: 16px;
+            }
+            .menu-title {
+                width: 200px; /* Adjust for smaller screens */
+            }
+            .social-link {
+                font-size: 20px;
+            }
+            .logo {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="screensaver">Click to Start</div>
+    <div class="vignette"></div>
+    <div class="lightning"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-light" id="cursor-light"></div>
+    
+    
+    <div class="menu-wrapper">
+        <img src="tru.jpg" alt="TruHacks Portal" class="menu-title">
+        <div class="logos">
+            
+            <!-- Replace text logos with image files -->
+            <div class="logo"><img src="gdsc.png" alt="gdsc Logo"></div>
+            <div class="logo"><img src="cce.png" alt="cce Logo"></div>
+        </div>
+        <!-- Replace text with an image -->
+        
+        <div class="menu-bar">
+            <a href="windows.html" class="menu-button">register.exe</a>
+            <a href="test.html" class="menu-button">schedule.exe</a>
+            <div class="menu-button" id="music-toggle">music on</div>
+            <a href="about.exe" class="menu-button">about.exe</a>
+            <div class="menu-slogan">"Hack the Future, Ride the Storm"</div>
+        </div>
+        <div class="social-links">
+            <a href="https://instagram.com" class="social-link"><i class='bx bxl-instagram'></i></a>
+            <a href="https://linkedin.com" class="social-link"><i class='bx bxl-linkedin'></i></a>
+            <a href="https://example.com" class="social-link"><i class='bx bx-link'></i></a>
+        </div>
+    </div>
+
+    <audio id="bike-audio" loop>
+        <source src="ride.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="rain-audio" loop>
+        <source src="rain.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const bikeAudio = document.getElementById("bike-audio");
+        const rainAudio = document.getElementById("rain-audio");
+        const screensaver = document.getElementById("screensaver");
+        const musicToggle = document.getElementById("music-toggle");
+        const lightning = document.querySelector('.lightning');
+        const cursor = document.getElementById("cursor");
+        const cursorLight = document.getElementById("cursor-light");
+        
+        bikeAudio.volume = 0.5;
+        rainAudio.volume = 0.2;
+        let isMusicOn = true;
+        let thunderAudio = null;
+
+        screensaver.addEventListener("click", () => {
+            screensaver.style.opacity = "0";
+            setTimeout(() => screensaver.remove(), 1000);
+            bikeAudio.play().catch(e => console.error("Bike audio error:", e));
+            rainAudio.play().catch(e => console.error("Rain audio error:", e));
+        });
+
+        musicToggle.addEventListener("click", () => {
+            if (isMusicOn) {
+                bikeAudio.pause();
+                rainAudio.pause();
+                musicToggle.textContent = "music off";
+            } else {
+                bikeAudio.play();
+                rainAudio.play();
+                musicToggle.textContent = "music on";
+            }
+            isMusicOn = !isMusicOn;
+        });
+
+        // Cursor movement handling
+        document.addEventListener("mousemove", (e) => {
+            cursor.style.left = `${e.clientX - 10}px`;
+            cursor.style.top = `${e.clientY - 10}px`;
+            cursorLight.style.left = `${e.clientX - 175}px`;
+            cursorLight.style.top = `${e.clientY - 175}px`;
+        });
+
+        let lastClickTime = 0;
+
+        async function triggerThunder() {
+            const now = Date.now();
+            if (now - lastClickTime < 2000) return;
+            lastClickTime = now;
+
+            const flash = () => {
+                lightning.style.opacity = Math.random() * 0.8 + 0.2;
+                setTimeout(() => lightning.style.opacity = 0, Math.random() * 50 + 20);
+            };
+            flash();
+            setTimeout(flash, 100);
+            setTimeout(flash, 150);
+
+            if (isMusicOn) {
+                thunderAudio = new Audio("thunder.mp3");
+                thunderAudio.play();
+            }
+        }
+
+        document.addEventListener('click', triggerThunder);
+    </script>
+</body>
+</html>
